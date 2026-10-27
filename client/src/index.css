@@ -1,0 +1,101 @@
+/* ============================================================
+   index.css — Global Styles
+   ============================================================
+   Imports Tailwind's base, components, and utilities layers.
+   Custom utilities (animations, gradient text) are added below.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base Resets ── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-gray-950 text-white antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Remove default list styles */
+  ul, ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* ── Custom Animations ── */
+@layer utilities {
+  /* Fade in + slide up — used by ProductCard */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeInUp {
+    animation: fadeInUp 0.4s ease-out both;
+  }
+
+  /* Gradient text animation */
+  @keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradientShift 4s ease infinite;
+  }
+
+  /* Subtle scale on hover (less than Tailwind's scale-105) */
+  .hover\:scale-102:hover {
+    transform: scale(1.02);
+  }
+
+  /* Line-clamp utilities (in case older Tailwind version is used) */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+}
+
+/* ── Scrollbar Styling (webkit) ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f1117;
+}
+::-webkit-scrollbar-thumb {
+  background: #2d2f3a;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3d3f52;
+}
+
+/* ── Selection colour ── */
+::selection {
+  background: rgba(139, 92, 246, 0.4);
+  color: #fff;
+}
