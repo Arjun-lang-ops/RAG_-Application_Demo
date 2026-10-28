@@ -92,9 +92,11 @@ const seedProducts = async () => {
     console.log("Product ingestion completed.");
   } catch (error) {
     console.error("Ingestion failed:", error.message);
+    process.exitCode = 1;
   } finally {
-    const mongoose = await import("mongoose");
-    await mongoose.default.disconnect();
+    if (Product.db.readyState !== 0) {
+      await Product.db.close();
+    }
   }
 };
 

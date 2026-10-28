@@ -2,28 +2,31 @@ import Product from "../models/Product.js";
 import { retryWithBackoff } from "../utils/retry.js";
 import { EMBEDDING_MODEL, generateEmbedding } from "./embeddingService.js";
 
-const buildProductText=(product)=>{
-    return [
-        product.name,
-        product.category,
-        product.brand,
-        product.description,
-        ...(product.tags||[])
-    ],join(' ')
-}
+const EMBEDDING_VERSION = 1;
 
-export const createProduct=async(productData)=>{
-    const searchableText=buildProductText(productData);
+const buildProductText = (product) => {
+  return [
+    product.name,
+    product.category,
+    product.brand,
+    product.description,
+    ...(product.tags || []),
+  ].join(" ");
+};
 
-    const embedding =await retryWithBackoff(()=>{
-        generateEmbedding(searchableText)
-    });
+export const createProduct = async (productData) => {
+  const searchableText = buildProductText(productData);
 
-    const product=await Product.create({
-        ...productData,embedding,
-        embeddingModel:EMBEDDING_MODEL,
-        embeddingVersion
-    });
+  const embedding = await retryWithBackoff(() =>
+    generateEmbedding(searchableText),
+  );
 
-    return product
-}
+  const product = await Product.create({
+    ...productData,
+    embedding,
+    embeddingModel: EMBEDDING_MODEL,
+    embeddingVersion: EMBEDDING_VERSION,
+  });
+
+  return product;
+};

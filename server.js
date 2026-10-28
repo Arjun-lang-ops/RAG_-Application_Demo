@@ -19,10 +19,7 @@ app.get("/", (req, res) => {
 });
 
 
-console.log(
-  "Gemini API key loaded:",
-  Boolean(process.env.GEMINI_API_KEY)
-); 
+
 
 
 app.use("/api/search", searchRoutes);

@@ -1,19 +1,23 @@
-import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
+import { pipeline } from "@huggingface/transformers";
 
-export const EMBEDDING_MODEL = "gemini-embedding-2";
+export const EMBEDDING_MODEL =
+  "Xenova/all-MiniLM-L6-v2";
+
+let extractor;
 
 export const generateEmbedding = async (text) => {
-  const response = await ai.models.embedContent({
-    model: EMBEDDING_MODEL,
-    contents: text,
-    config: {
-      outputDimensionality: 768,
-    },
+  if (!extractor) {
+    extractor = await pipeline(
+      "feature-extraction",
+      EMBEDDING_MODEL
+    );
+  }
+
+  const output = await extractor(text, {
+    pooling: "mean",
+    normalize: true,
   });
 
-  return response.embeddings[0].values;
+  return Array.from(output.data);
 };
